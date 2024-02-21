@@ -5,8 +5,10 @@
     "baseUrl": "./",
     "paths": {
       "@root/*": ["./*"],
+      "@src/*": ["./src/*"],
       "@app/*": ["./src/app/*"],
-      "@controller/*": ["./src/controllers/*"]
+      "@controller/*": ["./src/controllers/*"],
+      "@service/*": ["./src/services/*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,
