@@ -10,10 +10,6 @@ import services from '@src/services';
 @Module({
   imports: [],
   controllers,
-  providers: [
-    ...services,
-    { provide: APP_FILTER, useClass: ExceptionsFilter },
-    { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
-  ],
+  providers: [...services, { provide: APP_FILTER, useClass: ExceptionsFilter }, { provide: APP_INTERCEPTOR, useClass: TransformInterceptor }],
 })
 export class AppModule {}

@@ -14,17 +14,11 @@ export class AuthenticationController extends BaseController {
 
   @Post('register')
   public async register(@Req() req: Request) {
-    let body = req.body;
+    const body = req.body;
     body.password = (body?.password ?? '').trim();
     const validationSchema: ObjectSchema = Joi.object({
       email: Joi.string().email().required(),
-      password: Joi.string()
-        .min(8)
-        .checkUppercase(1)
-        .checkLowercase(1)
-        .checkDigit(1)
-        .checkSpecial(1)
-        .required(),
+      password: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
     }).unknown();
     await this.validateReq(validationSchema, body);
 

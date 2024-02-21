@@ -1,4 +1,4 @@
-import { EFlag } from "./enum";
+import { EFlag } from './enum';
 
 /* ---------------------------- Typescript Helper --------------------------- */
 export interface IObject {
@@ -20,6 +20,6 @@ export interface IMessageOption {
 
 /* ------------------------ Request Response Related ------------------------ */
 export interface IDetailException extends IObject {
-  flag: EFlag
+  flag: EFlag;
 }
 /* --------------------- END of Request Response Related -------------------- */

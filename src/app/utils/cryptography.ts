@@ -4,10 +4,7 @@ import jwt from 'jsonwebtoken';
 const { auth } = appConfig;
 
 class Cryptography {
-  public createSignature(
-    payload: any,
-    setExpire?: string | number | undefined
-  ) {
+  public createSignature(payload: any, setExpire?: string | number | undefined) {
     return jwt.sign(payload, auth.jwt.secret, {
       expiresIn: setExpire ?? auth.jwt.expiration,
       issuer: auth.jwt.issuer,

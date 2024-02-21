@@ -12,9 +12,7 @@ const appConfig = {
   app: {
     name: pjson.name,
     version: pjson.version,
-    env: (validNodeEnv.includes((process.env as any).NODE_ENV)
-      ? process.env.NODE_ENV
-      : 'development') as string,
+    env: (validNodeEnv.includes((process.env as any).NODE_ENV) ? process.env.NODE_ENV : 'development') as string,
     port: parseInt((process.env as any).PORT) || 3000,
   },
   auth: {

@@ -1,12 +1,6 @@
 import { Response } from 'express';
 import _ from 'lodash';
-import {
-  ExceptionFilter,
-  Catch,
-  ArgumentsHost,
-  HttpException,
-  HttpStatus,
-} from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
 
 import { EFlag } from '@src/interfaces/enum';
 
@@ -29,9 +23,8 @@ export default class ExceptionsFilter implements ExceptionFilter {
       let flag = undefined,
         details = {};
       if (exception instanceof CustomHttpException) {
-        const { flag: custom_flag, ...etc } = (exception as CustomHttpException)
-          .details;
-        flag = custom_flag;
+        const { flag: customFlag, ...etc } = (exception as CustomHttpException).details;
+        flag = customFlag;
         details = etc;
       }
 
@@ -53,9 +46,7 @@ export default class ExceptionsFilter implements ExceptionFilter {
       };
     }
 
-    status >= 300
-      ? ((result = undefined), (errors = { ...errors, statusCode: status }))
-      : (errors = undefined);
+    status >= 300 ? ((result = undefined), (errors = { ...errors, statusCode: status })) : (errors = undefined);
     res.status(status).json({
       ...(typeof result === 'object' ? (result as object) : { result }),
       ...errors,

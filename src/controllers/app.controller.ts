@@ -11,9 +11,7 @@ export class AppController {
       name: appConfig.app.name,
       version: appConfig.app.version,
       environment: appConfig.app.env,
-      uptime: moment
-        .duration(process.uptime(), 'seconds')
-        .format('h [hrs] : m [min] : s [sec]', { trim: false }),
+      uptime: moment.duration(process.uptime(), 'seconds').format('h [hrs] : m [min] : s [sec]', { trim: false }),
     };
   }
 }
