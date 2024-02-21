@@ -17,5 +17,12 @@ const appConfig = {
       : 'development') as string,
     port: parseInt((process.env as any).PORT) || 3000,
   },
+  auth: {
+    jwt: {
+      secret: process.env.JWT_SECRET as string,
+      expiration: process.env.JWT_EXPIRATION as string,
+      issuer: process.env.JWT_ISSUER as string,
+    },
+  },
 };
 export default appConfig;
