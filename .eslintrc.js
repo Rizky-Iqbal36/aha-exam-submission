@@ -10,6 +10,12 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     project: __dirname + '/tsconfig.build.json',
-    tsconfigRootDir: __dirname,
+    tsconfigRootDir: __dirname + '/src',
+  },
+  ignorePatterns: ['dist'],
+  rules: {
+    '@typescript-eslint/no-explicit-any': 0,
+    '@typescript-eslint/no-useless-constructor': 0,
+    '@typescript-eslint/no-var-requires': 0,
   },
 };

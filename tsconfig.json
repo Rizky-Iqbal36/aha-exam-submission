@@ -4,7 +4,9 @@
     "module": "commonjs",
     "baseUrl": "./",
     "paths": {
-      "*": ["./src/*"]
+      "@root/*": ["./*"],
+      "@app/*": ["./src/app/*"],
+      "@controller/*": ["./src/controllers/*"]
     },
     "outDir": "./dist",
     "esModuleInterop": true,
@@ -14,5 +16,5 @@
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true
   },
-  "include": ["src", ".eslintrc.js"]
+  "include": ["src/**/*", ".eslintrc.js"]
 }
