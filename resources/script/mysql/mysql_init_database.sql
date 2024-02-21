@@ -1,0 +1,6 @@
+CREATE USER 'mysql'@'*' IDENTIFIED BY 'secret';
+CREATE DATABASE IF NOT EXISTS aha_exam;
+
+GRANT ALL PRIVILEGES ON `aha_exam`.* TO 'mysql'@'%';
+
+FLUSH PRIVILEGES;

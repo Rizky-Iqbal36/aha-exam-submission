@@ -1,0 +1,59 @@
+version: '3.7'
+services:
+  app:
+    container_name: app
+    image: node-app
+    build: .
+    restart: always
+    working_dir: /app
+    depends_on:
+      - mysql_db
+      # - postgres_db
+    ports:
+      - 3030:3000
+    command: npm run start:prod
+    networks:
+      - global_network
+  mysql_db:
+    container_name: mysql_db
+    image: mysql:5.7.37
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: superuser
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: secret
+    ports:
+      - 3306:3306
+    volumes:
+      - ./resources/script/mysql/mysql_init_database.sql:/docker-entrypoint-initdb.d/init-script.sql
+    networks:
+      - global_network
+  # postgres_db:
+  #   container_name: postgres_db
+  #   image: postgres
+  #   restart: always
+  #   environment:
+  #     POSTGRES_USERNAME: postgres
+  #     POSTGRES_PASSWORD: 123456
+  #   volumes:
+  #     - ./resources/script/postgres/postgres_init_database.sql:/docker-entrypoint-initdb.d/postgres_init_database.sql
+  #   ports:
+  #     - 5432:5432
+  #   networks:
+  #     - global_network
+  # phppgadmin:
+  #   container_name: phppgadmin
+  #   restart: always
+  #   image: dpage/pgadmin4
+  #   environment:
+  #     PGADMIN_DEFAULT_EMAIL: mimin@admin.com
+  #     PGADMIN_DEFAULT_PASSWORD: admin
+  #   ports:
+  #     - '80:80'
+  #   networks:
+  #     - global_network
+
+networks:
+  global_network:
+    driver: bridge
+    name: global_network

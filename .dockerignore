@@ -1,0 +1,10 @@
+/dist
+/node_modules
+.env
+Dockerfile
+docker-compose.yml
+nest-cli.json
+.gitignore
+.eslintrc.js
+.prettierrc
+README.md
