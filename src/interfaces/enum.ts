@@ -1,3 +1,10 @@
+export enum EDbPrefix {
+  development = 'DEV',
+  test = 'TEST',
+  staging = 'STAGING',
+  production = 'PROD'
+}
+
 export enum EFlag {
   INVALID_SIGNATURE = 'INVALID_SIGNATURE',
   REACH_REQUEST_LIMIT = 'REACH_REQUEST_LIMIT',
@@ -6,6 +13,7 @@ export enum EFlag {
   RESOURCE_NOT_FOUND = 'RESOURCE_NOT_FOUND',
   RESOURCE_GONE = 'RESOURCE_GONE',
   FORBIDDEN = 'FORBIDDEN',
+  BAD_REQUEST = 'BAD_REQUEST',
   UNAUTHORIZED = 'UNAUTHORIZED',
   DATA_EMPTY = 'DATA_EMPTY',
   METHOD_NOT_ALLOWED = 'METHOD_NOT_ALLOWED',
