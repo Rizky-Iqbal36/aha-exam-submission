@@ -21,4 +21,10 @@ export class AuthService {
     });
     return 'OK';
   }
+
+  public async verification({ email }: { email: string }) {
+    return {
+      result: true,
+    };
+  }
 }
