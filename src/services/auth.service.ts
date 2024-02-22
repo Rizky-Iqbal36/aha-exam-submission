@@ -33,6 +33,20 @@ export class AuthService {
     return 'OK';
   }
 
+  public async login({ email, password: incomingPw }: TAuth) {
+    const invalidCredsException = new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'Incorrect email address and / or password.' });
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) throw invalidCredsException;
+
+    const { id, password } = user;
+    const comparePw = cryptography.comparePassword(incomingPw, password);
+    if (!comparePw) throw invalidCredsException;
+
+    const token = cryptography.createSignature({ id, email });
+    await this.userRepository.update({ email }, { lastLoginDate: () => 'NOW()', lastUpdate: () => 'NOW()' });
+    return { message: 'Login Success', token };
+  }
+
   public async verification({ email }: { email: string }) {
     return {
       result: true,

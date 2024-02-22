@@ -11,10 +11,6 @@ class Cryptography {
     });
   }
 
-  public generateToken(uid: number, setExpire?: string | number | undefined) {
-    return this.createSignature({ uid }, setExpire);
-  }
-
   public verifyToken(token: string, jwtSecret?: string) {
     return jwt.verify(token, jwtSecret ?? auth.jwt.secret);
   }

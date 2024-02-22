@@ -14,11 +14,14 @@ export default class UserModel {
   @Column()
   salt: string;
 
-  @Column({ type: 'enum', enum: ['Y', 'N'], default: 'N' })
-  isEmailVerified: 'Y' | 'N';
+  @Column({ type: 'timestamp' })
+  lastLoginDate: string;
+
+  @Column({ type: 'timestamp', default: null, nullable: true })
+  emailVerificationDate: string | null;
 
   @UpdateDateColumn({ type: 'timestamp' })
-  last_update: string;
+  lastUpdate: string;
 
   @CreateDateColumn({ type: 'timestamp' })
   insertDate: string;

@@ -29,6 +29,18 @@ export class AuthenticationController extends BaseController {
     return this.authService.register(body);
   }
 
+  @Post('login')
+  public async login(@Req() req: Request) {
+    const body = req.body;
+    const validationSchema: ObjectSchema = Joi.object({
+      email: Joi.string().email().required(),
+      password: Joi.string().required(),
+    }).unknown();
+    await this.validateReq(validationSchema, body, EFlag.INVALID_BODY);
+
+    return this.authService.login(body);
+  }
+
   @Get('verification')
   public async verification(@Req() req: Request) {
     const query = req.query;
