@@ -3,12 +3,22 @@ import { Injectable } from '@nestjs/common';
 import cryptography from '@app/utils/cryptography';
 import sendGrid from '@app/providers/sendGrid';
 import appConfig from '@app/config';
+import { BadRequest, NotFound } from '@app/exception';
 const { app } = appConfig;
 
+import UserRepository from '@repository/user.repository';
+import { EFlag } from '@src/interfaces/enum';
+
+type TAuth = { email: string; password: string };
 @Injectable()
 export class AuthService {
-  public async register({ email, password }: { email: string; password: string }) {
-    const saltedPw = cryptography.hashPassword(password);
+  constructor(private readonly userRepository: UserRepository) {}
+
+  public async register({ email, password: incomingPw }: TAuth) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (user) throw new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'User already registered' });
+
+    const { hashedPassword, salt } = cryptography.hashPassword(incomingPw);
     const signature = cryptography.createSignature({ email });
     await sendGrid.sendEmail({
       recipient: email,
@@ -19,6 +29,7 @@ export class AuthService {
                 <p>Best regards,</p>
                 <p>M Rizky Ikbal Syaifullah</p>`,
     });
+    await this.userRepository.insert({ email, password: hashedPassword, salt });
     return 'OK';
   }
 

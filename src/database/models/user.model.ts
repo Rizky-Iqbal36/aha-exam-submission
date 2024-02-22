@@ -9,7 +9,7 @@ export default class UserModel {
   email: string;
 
   @Column()
-  hash: string;
+  password: string;
 
   @Column()
   salt: string;

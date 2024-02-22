@@ -23,7 +23,7 @@ class Cryptography {
     const salt = bcrypt.genSaltSync();
 
     return {
-      hashedPw: bcrypt.hashSync(pw, salt),
+      hashedPassword: bcrypt.hashSync(pw, salt),
       salt,
     };
   }
