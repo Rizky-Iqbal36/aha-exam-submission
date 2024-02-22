@@ -10,6 +10,7 @@ const validNodeEnv = ['development', 'test', 'staging', 'production'];
 const appConfig = {
   cpuSize: os.cpus().length,
   app: {
+    url: process.env.APP_URL as string,
     name: pjson.name,
     version: pjson.version,
     env: (validNodeEnv.includes((process.env as any).NODE_ENV) ? process.env.NODE_ENV : 'development') as string,
@@ -23,4 +24,9 @@ const appConfig = {
     },
   },
 };
+
+export const sendgridConfig = {
+  secret: process.env.SENDGRID_SECRET as string,
+};
+
 export default appConfig;
