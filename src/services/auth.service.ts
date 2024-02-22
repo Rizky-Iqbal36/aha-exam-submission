@@ -48,8 +48,22 @@ export class AuthService {
   }
 
   public async verification({ email }: { email: string }) {
+    const user = await this.userRepository.findOne({ where: { email } });
+    if (!user) throw new NotFound({ flag: EFlag.RESOURCE_NOT_FOUND }, { message: 'Email not found' });
+
+    const token = cryptography.createSignature({ id: user.id, email });
+    if (user.emailVerificationDate)
+      return {
+        result: true,
+        token,
+        message: 'Email already verified',
+      };
+
+    await this.userRepository.update({ email }, { emailVerificationDate: () => 'NOW()', lastUpdate: () => 'NOW()' });
     return {
       result: true,
+      token,
+      message: 'Email verified',
     };
   }
 }
