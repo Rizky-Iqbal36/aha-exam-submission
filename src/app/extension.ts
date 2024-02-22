@@ -15,7 +15,7 @@ const stringDigitChecker = ({ value, digit }: { value: string; digit: number }, 
     checkUppercase: /[A-Z]/g,
     checkLowercase: /[a-z]/g,
     checkDigit: /\d/g,
-    checkSpecial: /[^\w\d]|[$&+,:;=?@#|'<>.^*()%!-]/,
+    checkSpecial: /[^\w\d]|[$&+,:;=?@#|'<>.^*()%!-]/g,
   };
   const stringDigitCheckerCollection: Record<TStringDigitRules, () => any> = {
     ...stringDigitRules.reduce((stringDigitCheckerRule: any, key) => {
