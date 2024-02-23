@@ -4,6 +4,7 @@ import { sendgridConfig } from '@app/config';
 
 class SendGridProvider {
   private readonly client: AxiosInstance;
+
   constructor() {
     this.client = axios.create({
       baseURL: 'https://api.sendgrid.com/v3',

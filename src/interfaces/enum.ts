@@ -2,7 +2,7 @@ export enum EDbPrefix {
   development = 'DEV',
   test = 'TEST',
   staging = 'STAGING',
-  production = 'PROD'
+  production = 'PROD',
 }
 
 export enum EFlag {
