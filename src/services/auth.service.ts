@@ -43,7 +43,7 @@ export class AuthService {
     if (!comparePw) throw invalidCredsException;
 
     const token = cryptography.createSignature({ id, email });
-    await this.userRepository.update({ email }, { lastLoginDate: () => 'NOW()', lastUpdate: () => 'NOW()' });
+    await this.userRepository.update({ email }, { loginCount: user.loginCount + 1, lastLoginDate: () => 'NOW()', lastUpdate: () => 'NOW()' });
     return { message: 'Login Success', token };
   }
 

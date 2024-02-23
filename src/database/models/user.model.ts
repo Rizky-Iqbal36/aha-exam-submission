@@ -14,6 +14,9 @@ export default class UserModel {
   @Column()
   salt: string;
 
+  @Column()
+  loginCount: number;
+
   @Column({ type: 'timestamp' })
   lastLoginDate: string;
 
