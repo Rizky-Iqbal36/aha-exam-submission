@@ -41,6 +41,12 @@ export class AuthenticationController extends BaseController {
     return this.authService.login(body);
   }
 
+  @Get('oauth')
+  public async oauthHandler(@Req() req: Request) {
+    const query = req.query;
+    return { query };
+  }
+
   @Get('verification')
   public async verification(@Req() req: Request) {
     const query = req.query;
