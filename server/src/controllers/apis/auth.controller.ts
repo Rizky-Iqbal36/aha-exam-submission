@@ -2,13 +2,16 @@ import { Request } from 'express';
 import CoreJoi, { ObjectSchema } from 'joi';
 import { joiCustomExtend } from '@app/extension';
 const Joi = CoreJoi.extend(joiCustomExtend) as typeof CoreJoi;
-import { Controller, Get, Post, Req } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res } from '@nestjs/common';
 
 import { EFlag } from '@src/interfaces/enum';
 import { AuthService } from '@service/auth.service';
 import cryptography from '@app/utils/cryptography';
+import appConfig from '@app/config';
+const { client } = appConfig;
 
 import { BaseController } from '../base.controller';
+import { IResponse } from '@root/src/interfaces';
 
 @Controller('auth')
 export class AuthenticationController extends BaseController {
@@ -42,9 +45,16 @@ export class AuthenticationController extends BaseController {
   }
 
   @Get('oauth')
-  public async oauthHandler(@Req() req: Request) {
-    const query = req.query;
-    return { query };
+  public async oauthHandler(@Req() req: Request, @Res() res: IResponse) {
+    const query = req.query as any;
+    const validationSchema: ObjectSchema = Joi.object({
+      code: Joi.string().required(),
+    }).unknown();
+    await this.validateReq(validationSchema, query, EFlag.INVALID_PARAM);
+
+    const token = await this.authService.oauthHandler(query);
+    res.cookie('accessToken', token);
+    res.redirect(client.url + '/dashboard');
   }
 
   @Get('verification')

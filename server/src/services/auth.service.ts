@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 import cryptography from '@app/utils/cryptography';
 import sendGrid from '@app/providers/sendGrid';
+import googleOAuth from '@app/providers/googleOAuth';
 import appConfig from '@app/config';
 import { BadRequest, NotFound } from '@app/exception';
 const { app } = appConfig;
@@ -65,5 +66,26 @@ export class AuthService {
       token,
       message: 'Email verified',
     };
+  }
+
+  public async oauthHandler({ code }: { code: string }) {
+    const { id_token: idToken, access_token: accessToken } = await googleOAuth.getOAuthToken(code);
+
+    const { email, name, picture: profilePicture } = await googleOAuth.getGoogleUser(idToken, accessToken);
+    const user = await this.userRepository.findOne({ where: { email } });
+    const { raw } = await this.userRepository.upsert(
+      {
+        email,
+        name,
+        profilePicture,
+        loginCount: user ? user.loginCount + 1 : 1,
+        emailVerificationDate: !user ? () => 'NOW()' : user.emailVerificationDate,
+        lastLoginDate: () => 'NOW()',
+      },
+      ['email']
+    );
+    const userId = raw.insertId;
+    const token = cryptography.createSignature({ id: userId, email });
+    return token;
   }
 }

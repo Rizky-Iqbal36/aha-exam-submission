@@ -25,6 +25,15 @@ const appConfig = {
       issuer: process.env.JWT_ISSUER as string,
     },
   },
+  client: {
+    url: process.env.CLIENT_URL as string,
+  },
+};
+
+export const googleConfig = {
+  oauthClientId: process.env.GOOGLE_OAUTH_CLIENT_ID as string,
+  oauthClientSecret: process.env.GOOGLE_OAUTH_CLIENT_SECRET as string,
+  oauthClientRedirectURI: process.env.GOOGLE_OAUTH_CLIENT_REDIRECT_URI as string,
 };
 
 export const sendgridConfig = {

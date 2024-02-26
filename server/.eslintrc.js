@@ -9,6 +9,7 @@ module.exports = {
   },
   ignorePatterns: ['dist'],
   rules: {
+    'import/no-extraneous-dependencies': 0,
     '@typescript-eslint/no-explicit-any': 0,
     '@typescript-eslint/no-useless-constructor': 0,
     '@typescript-eslint/no-var-requires': 0,

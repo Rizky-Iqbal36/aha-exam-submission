@@ -1,21 +1,28 @@
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, Index, UpdateDateColumn } from 'typeorm';
 
 @Entity({ name: 'users' })
+@Index('IDX_user_email', ['email'], { unique: true })
 export default class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
+  @Column({ default: null })
+  name: string;
+
   @Column()
   email: string;
 
-  @Column()
+  @Column({ default: null })
   password: string;
 
-  @Column()
+  @Column({ default: null })
   salt: string;
 
-  @Column()
+  @Column({ default: 0 })
   loginCount: number;
+
+  @Column({ default: null })
+  profilePicture: string;
 
   @Column({ type: 'timestamp' })
   lastLoginDate: string;
