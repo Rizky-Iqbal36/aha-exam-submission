@@ -47,7 +47,7 @@ export default class ExceptionsFilter implements ExceptionFilter {
     }
 
     status >= 300 ? ((result = undefined), (errors = { ...errors, statusCode: status })) : (errors = undefined);
-    !res.headersSent ??
+    if (!res.headersSent)
       res.status(status).json({
         ...(typeof result === 'object' ? (result as object) : { result }),
         ...errors,
