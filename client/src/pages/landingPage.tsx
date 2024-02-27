@@ -1,7 +1,7 @@
 import React from "react";
 
 import SwipeableViews from "react-swipeable-views";
-import { AppBar, Tabs, Tab, Box, Typography, useTheme } from "@mui/material";
+import { AppBar, Tabs, Tab, Box, useTheme } from "@mui/material";
 import Login from "../components/molekul/login";
 import Register from "../components/molekul/register";
 
@@ -24,8 +24,8 @@ function TabPanel(props: TabPanelProps) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography align="center">{children}</Typography>
+        <Box sx={{ p: 3, display: "flex", justifyContent: "center" }}>
+          {children}
         </Box>
       )}
     </div>
