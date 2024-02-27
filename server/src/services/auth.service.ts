@@ -37,7 +37,7 @@ export class AuthService {
   public async login({ email, password: incomingPw }: TAuth) {
     const invalidCredsException = new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'Incorrect email address and / or password.' });
     const user = await this.userRepository.findOne({ where: { email } });
-    if (!user) throw invalidCredsException;
+    if (!user || !user.password) throw invalidCredsException;
 
     const { id, password } = user;
     const comparePw = cryptography.comparePassword(incomingPw, password);
