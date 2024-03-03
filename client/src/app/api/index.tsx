@@ -21,4 +21,6 @@ class BackendInteractor {
   }
 }
 
-export default new BackendInteractor();
+const backendInteractor = new BackendInteractor();
+
+export default backendInteractor;

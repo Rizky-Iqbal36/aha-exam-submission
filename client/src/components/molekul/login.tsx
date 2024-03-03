@@ -2,8 +2,8 @@ import React from "react";
 import { useMutation } from "react-query";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import GoogleIcon from "../../assets/googleIcon.svg";
 import backendInteractor from "../../app/api";
+import GoogleOAuthButton from "../atom/googleOAuthButton";
 
 type TLoginPayload = {
   email: string;
@@ -38,7 +38,14 @@ const Login = () => {
   );
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
         style={{
@@ -73,6 +80,8 @@ const Login = () => {
           {isLoading ? "Loading" : "Log In"}
         </button>
       </form>
+      <p style={{ fontSize: 11 }}>---------------or---------------</p>
+      <GoogleOAuthButton />
     </div>
   );
 };
