@@ -50,11 +50,15 @@ export class AuthenticationController extends BaseController {
     const validationSchema: ObjectSchema = Joi.object({
       code: Joi.string().required(),
     }).unknown();
-    await this.validateReq(validationSchema, query, EFlag.INVALID_PARAM);
-
-    const token = await this.authService.oauthHandler(query);
-    res.cookie('accessToken', token);
-    res.redirect(client.url + '/dashboard');
+    const validation = await this.validateReq(validationSchema, query, EFlag.INVALID_PARAM).catch((err) => {
+      res.redirect(client.url);
+      return false;
+    });
+    if (validation) {
+      const token = await this.authService.oauthHandler(query);
+      res.cookie('accessToken', token);
+      res.redirect(client.url + '/dashboard');
+    }
   }
 
   @Get('verification')
