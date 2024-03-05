@@ -15,10 +15,7 @@ class BackendInteractor {
     });
   }
 
-
-
   public async login(payload: { email: string; password: string }) {
-    
     return this.client
       .post("/auth/login", payload, {
         headers: {
@@ -30,6 +27,21 @@ class BackendInteractor {
 
   public async profile() {
     return this.client.get("/user/profile").then((res) => res.data);
+  }
+
+  public async users(): Promise<
+    {
+      id: number;
+      profilePicture: string;
+      email: string;
+      name: string;
+      totalLogin: number;
+      lastSessionDate: string;
+      emailVerificationDate: string;
+      registrationDate: string;
+    }[]
+  > {
+    return this.client.get("/user/list").then((res) => res.data.data);
   }
 }
 
