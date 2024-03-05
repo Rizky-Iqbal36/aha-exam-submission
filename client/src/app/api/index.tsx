@@ -1,5 +1,6 @@
 import axios, { AxiosInstance } from "axios";
 import appConfig from "../config";
+import { TAuthPayload } from "../../interfaces";
 
 class BackendInteractor {
   private client: AxiosInstance;
@@ -15,9 +16,9 @@ class BackendInteractor {
     });
   }
 
-  public async login(payload: { email: string; password: string }) {
+  public async auth(mode: "register" | "login", payload: TAuthPayload) {
     return this.client
-      .post("/auth/login", payload, {
+      .post(`/auth/${mode}`, payload, {
         headers: {
           "content-type": "application/json",
         },
@@ -45,7 +46,9 @@ class BackendInteractor {
   }
 
   public async resendVerification() {
-    return this.client.get("/email/resend-verification").then((res) => res.data);
+    return this.client
+      .get("/email/resend-verification")
+      .then((res) => res.data);
   }
 }
 

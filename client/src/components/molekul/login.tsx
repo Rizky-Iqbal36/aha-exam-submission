@@ -6,11 +6,9 @@ import BackendInteractor from "../../app/api";
 import GoogleOAuthButton from "../atom/googleOAuthButton";
 import { Cookies } from "react-cookie";
 import { useNavigate } from "react-router-dom";
+import { TAuthPayload } from "../../interfaces";
+import { useAuth } from "../../app/context/AuthProvider";
 
-type TLoginPayload = {
-  email: string;
-  password: string;
-};
 const Login = () => {
   const backendInteractor = new BackendInteractor();
   const navigate = useNavigate();
@@ -27,12 +25,14 @@ const Login = () => {
     }),
     onSubmit: (values) => handleLogin(values),
   });
+  const context = useAuth();
   const { mutate: handleLogin, isLoading } = useMutation(
-    async (loginPayload: TLoginPayload) =>
-      backendInteractor.login(loginPayload),
+    async (loginPayload: TAuthPayload) =>
+      backendInteractor.auth("login", loginPayload),
     {
       async onSuccess({ user, token }: { user: any; token: string }) {
         const cookies = new Cookies();
+        context.setToken(token);
         cookies.set("accessToken", token);
 
         localStorage.setItem("user", JSON.stringify(await user));
@@ -90,7 +90,7 @@ const Login = () => {
         </button>
       </form>
       <p style={{ fontSize: 11 }}>---------------or---------------</p>
-      <GoogleOAuthButton />
+      <GoogleOAuthButton placeholder="Sign In with Google" />
     </div>
   );
 };

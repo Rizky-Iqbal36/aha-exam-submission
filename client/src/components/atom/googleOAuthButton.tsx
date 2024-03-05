@@ -2,7 +2,7 @@ import React from "react";
 import GoogleIcon from "../../assets/googleIcon.svg";
 import { getGoogleOAuthURL } from "../../utils";
 
-const GoogleOAuthButton = () => {
+const GoogleOAuthButton = ({placeholder}:{placeholder: string}) => {
   return (
     <div>
       <button
@@ -17,7 +17,7 @@ const GoogleOAuthButton = () => {
         //   )
         // }
       >
-        Sign In with Google{" "}
+        {placeholder}
         <img
           src={GoogleIcon}
           alt="google-icon"

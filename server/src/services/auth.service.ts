@@ -32,8 +32,20 @@ export class AuthService {
                 <p>Best regards,</p>
                 <p>M Rizky Ikbal Syaifullah</p>`,
     });
-    await this.userRepository.insert({ email, password: hashedPassword, salt });
-    return 'OK';
+
+    const { raw } = await this.userRepository.insert({ email, password: hashedPassword, salt, loginCount: 1 });
+    const token = cryptography.createSignature({ id: raw.insertId, email });
+
+    return {
+      message: 'Register Success',
+      user: {
+        name: null,
+        email,
+        profilePicture: null,
+        isEmailVerified: false,
+      },
+      token,
+    };
   }
 
   public async login({ email, password: incomingPw }: TAuth) {

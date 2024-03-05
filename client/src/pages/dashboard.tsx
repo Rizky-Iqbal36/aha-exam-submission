@@ -34,7 +34,9 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 
 export type Await<T> = T extends PromiseLike<infer U> ? U : T;
 const Dashboard = () => {
-  const user = JSON.parse(localStorage.getItem("user") ?? "false");
+  const [user, setUser] = useState(
+    JSON.parse(localStorage.getItem("user") ?? "false")
+  );
   const isEmailVerified = user?.isEmailVerified;
 
   const navigate = useNavigate();
@@ -51,6 +53,11 @@ const Dashboard = () => {
       backendInteractor.users().then((data) => {
         setUsers(data);
         setLoading(false);
+      });
+    else
+      backendInteractor.profile().then((user) => {
+        localStorage.setItem("user", JSON.stringify(user));
+        setUser(user);
       });
   }, []);
 
