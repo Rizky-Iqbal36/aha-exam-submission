@@ -23,12 +23,14 @@ export default class AuthMiddleware implements NestMiddleware {
     try {
       const verified = cryptography.verifyToken(token) as any;
       user = await this.userRepositry.findOne({ where: { id: verified.id } });
-      if (user)
+      if (user) {
         res.locals.user = {
           id: user.id,
           email: user.email,
           isEmailVerified: !!user.emailVerificationDate,
         };
+        this.userRepositry.update({ id: user.id }, { lastSessionDate: () => 'NOW()' });
+      }
     } catch (err: any) {
       throw new BadRequest({ flag: EFlag.INVALID_JWT, reason: err.message }, { message: 'Invalid Token' });
     }

@@ -27,6 +27,9 @@ export default class UserModel {
   @Column({ type: 'timestamp' })
   lastLoginDate: string;
 
+  @Column({ type: 'timestamp' })
+  lastSessionDate: string;
+
   @Column({ type: 'timestamp', default: null, nullable: true })
   emailVerificationDate: string | null;
 

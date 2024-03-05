@@ -17,11 +17,13 @@ export class UserService {
 
     const users = await this.userRepository.find();
     return {
-      data: users.map(({ id, email, loginCount: totalLogin, emailVerificationDate, insertDate }) => ({
+      data: users.map(({ id, email, name, profilePicture, loginCount: totalLogin, lastSessionDate, emailVerificationDate, insertDate }) => ({
         id,
+        profilePicture,
         email,
+        name: name ?? '-',
         totalLogin,
-        lastSessionDate: null,
+        lastSessionDate: lastSessionDate ? moment(lastSessionDate).format('LLL') : '-',
         emailVerificationDate: emailVerificationDate ? moment(emailVerificationDate).format('LLL') : '-',
         registrationDate: moment(insertDate).format('LLL'),
       })),
