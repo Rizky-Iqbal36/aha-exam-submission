@@ -43,6 +43,10 @@ class BackendInteractor {
   > {
     return this.client.get("/user/list").then((res) => res.data.data);
   }
+
+  public async resendVerification() {
+    return this.client.get("/email/resend-verification").then((res) => res.data);
+  }
 }
 
 export default BackendInteractor;

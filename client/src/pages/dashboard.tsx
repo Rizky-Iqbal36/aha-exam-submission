@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 import { styled } from "@mui/material/styles";
 import Table from "@mui/material/Table";
@@ -36,6 +37,7 @@ const Dashboard = () => {
   const user = JSON.parse(localStorage.getItem("user") ?? "false");
   const isEmailVerified = user?.isEmailVerified;
 
+  const navigate = useNavigate();
   const context = useAuth();
   const backendInteractor = new BackendInteractor(context.token);
 
@@ -45,10 +47,11 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    backendInteractor.users().then((data) => {
-      setUsers(data);
-      setLoading(false);
-    });
+    if (isEmailVerified)
+      backendInteractor.users().then((data) => {
+        setUsers(data);
+        setLoading(false);
+      });
   }, []);
 
   return (
@@ -120,7 +123,27 @@ const Dashboard = () => {
             </div>
           )
         ) : (
-          "You are not allowed to access this page, your email is not verified, click here to Resend Email Verification"
+          <p id="not-allowed" style={{ textAlign: "center" }}>
+            {`You are not allowed to access this page, your email (${user.email}) is not verified`}
+            , click{" "}
+            <a
+              href="#not-allowed"
+              style={{ color: "blue", cursor: "pointer" }}
+              onClick={async () => {
+                const data = await backendInteractor.resendVerification();
+                window.alert(data.message);
+
+                await backendInteractor.profile().then((user) => {
+                  localStorage.setItem("user", JSON.stringify(user));
+                });
+
+                navigate("/dashboard");
+              }}
+            >
+              here
+            </a>{" "}
+            to Resend Email Verification
+          </p>
         )}
       </div>
     </div>

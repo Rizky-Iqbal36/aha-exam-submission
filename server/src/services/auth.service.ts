@@ -10,6 +10,7 @@ const { app } = appConfig;
 
 import UserRepository from '@repository/user.repository';
 import { EFlag } from '@src/interfaces/enum';
+import { IResponse } from '../interfaces';
 
 type TAuth = { email: string; password: string };
 @Injectable()
@@ -27,7 +28,7 @@ export class AuthService {
       subject: 'Email Verification | Aha Exam Submission',
       message: `<p>Thank you for signing up</p>
                 <p>To complete your registration and activate your account, please click on the following link:</p>
-                <p>${app.url}/auth/verification?signature=${signature}</p>
+                <p>${app.url}/auth/sign-verification?signature=${signature}</p>
                 <p>Best regards,</p>
                 <p>M Rizky Ikbal Syaifullah</p>`,
     });
@@ -70,6 +71,22 @@ export class AuthService {
       result: true,
       token,
       message: 'Email verified',
+    };
+  }
+
+  public async resendVerification({ email }: IResponse['locals']['user']) {
+    const signature = cryptography.createSignature({ email });
+    await sendGrid.sendEmail({
+      recipient: email,
+      subject: 'Email Verification (Resend) | Aha Exam Submission',
+      message: `<p>Thank you for signing up</p>
+                <p>To complete your registration and activate your account, please click on the following link:</p>
+                <p>${app.url}/auth/sign-verification?signature=${signature}</p>
+                <p>Best regards,</p>
+                <p>M Rizky Ikbal Syaifullah</p>`,
+    });
+    return {
+      message: 'Email Sent, Please check your inbox',
     };
   }
 

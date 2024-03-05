@@ -13,13 +13,13 @@ const { client } = appConfig;
 import { BaseController } from '../base.controller';
 import { IResponse } from '@root/src/interfaces';
 
-@Controller('auth')
+@Controller()
 export class AuthenticationController extends BaseController {
   constructor(private readonly authService: AuthService) {
     super();
   }
 
-  @Post('register')
+  @Post('auth/register')
   public async register(@Req() req: Request) {
     const body = req.body;
     body.password = (body?.password ?? '').trim();
@@ -32,7 +32,7 @@ export class AuthenticationController extends BaseController {
     return this.authService.register(body);
   }
 
-  @Post('login')
+  @Post('auth/login')
   public async login(@Req() req: Request, @Res() res: IResponse) {
     const body = req.body;
     const validationSchema: ObjectSchema = Joi.object({
@@ -44,7 +44,7 @@ export class AuthenticationController extends BaseController {
     return this.authService.login(body);
   }
 
-  @Get('oauth')
+  @Get('auth/oauth')
   public async oauthHandler(@Req() req: Request, @Res() res: IResponse) {
     const query = req.query as any;
     const validationSchema: ObjectSchema = Joi.object({
@@ -61,8 +61,13 @@ export class AuthenticationController extends BaseController {
     }
   }
 
-  @Get('verification')
-  public async verification(@Req() req: Request) {
+  @Get('email/resend-verification')
+  public async resendVerification(@Res() res: IResponse) {
+    return this.authService.resendVerification(res.locals.user);
+  }
+
+  @Get('auth/sign-verification')
+  public async signVerification(@Req() req: Request, @Res() res: IResponse) {
     const query = req.query;
     const validationSchema: ObjectSchema = Joi.object({
       signature: Joi.string().required(),
@@ -71,6 +76,8 @@ export class AuthenticationController extends BaseController {
     const signature = query.signature as string;
     const { email } = cryptography.verifyToken(signature) as any;
 
-    return this.authService.verification({ email });
+    const { token } = await this.authService.verification({ email });
+    res.cookie('accessToken', token);
+    res.redirect(client.url + '/onboard');
   }
 }
