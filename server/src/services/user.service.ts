@@ -6,6 +6,7 @@ import { IResponse } from '@src/interfaces';
 import UserRepository from '@repository/user.repository';
 
 import { Forbidden } from '@app/exception';
+import UserModel from '../database/models/user.model';
 
 @Injectable()
 export class UserService {
@@ -25,5 +26,10 @@ export class UserService {
         registrationDate: moment(insertDate).format('LLL'),
       })),
     };
+  }
+
+  public async profile({ email, isEmailVerified }: IResponse['locals']['user']) {
+    let user = (await this.userRepository.findOne({ select: ['email', 'name', 'profilePicture'], where: { email } })) as UserModel;
+    return { ...user, isEmailVerified };
   }
 }

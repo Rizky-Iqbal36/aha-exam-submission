@@ -15,4 +15,9 @@ export class UserController extends BaseController {
   public async userList(@Res() res: IResponse) {
     return this.userService.userList(res.locals.user);
   }
+
+  @Get('profile')
+  public async profile(@Res() res: IResponse) {
+    return this.userService.profile(res.locals.user);
+  }
 }
