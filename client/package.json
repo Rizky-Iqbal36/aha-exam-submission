@@ -29,7 +29,10 @@
     "extends": [
       "react-app",
       "react-app/jest"
-    ]
+    ],
+    "rules": {
+      "no-useless-computed-key": "off"
+    }
   },
   "browserslist": {
     "production": [
@@ -51,6 +54,7 @@
     "@types/node": "^20.11.20",
     "@types/react": "^18.2.59",
     "@types/react-dom": "^18.2.19",
-    "@types/react-swipeable-views": "^0.13.5"
+    "@types/react-swipeable-views": "^0.13.5",
+    "eslint": "^8.57.0"
   }
 }
