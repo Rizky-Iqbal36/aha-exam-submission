@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import { Injectable } from '@nestjs/common';
 
 import cryptography from '@app/utils/cryptography';
@@ -36,7 +37,7 @@ export class AuthService {
 
   public async login({ email, password: incomingPw }: TAuth) {
     const invalidCredsException = new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'Incorrect email address and / or password.' });
-    const user = await this.userRepository.findOne({ where: { email } });
+    let user = await this.userRepository.findOne({ select: ['id', 'email', 'name', 'profilePicture', 'emailVerificationDate', 'password', 'loginCount'], where: { email } });
     if (!user || !user.password) throw invalidCredsException;
 
     const { id, password } = user;
@@ -45,7 +46,11 @@ export class AuthService {
 
     const token = cryptography.createSignature({ id, email });
     await this.userRepository.update({ email }, { loginCount: user.loginCount + 1, lastLoginDate: () => 'NOW()', lastUpdate: () => 'NOW()' });
-    return { message: 'Login Success', token };
+
+    let userData: any = _.omit(user, ['id', 'emailVerificationDate', 'password', 'loginCount']);
+    userData.isEmailVerified = !!user.emailVerificationDate;
+
+    return { message: 'Login Success', user: userData, token };
   }
 
   public async verification({ email }: { email: string }) {

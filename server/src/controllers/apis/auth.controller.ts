@@ -33,7 +33,7 @@ export class AuthenticationController extends BaseController {
   }
 
   @Post('login')
-  public async login(@Req() req: Request) {
+  public async login(@Req() req: Request, @Res() res: IResponse) {
     const body = req.body;
     const validationSchema: ObjectSchema = Joi.object({
       email: Joi.string().email().required(),
@@ -57,7 +57,7 @@ export class AuthenticationController extends BaseController {
     if (validation) {
       const token = await this.authService.oauthHandler(query);
       res.cookie('accessToken', token);
-      res.redirect(client.url + '/dashboard');
+      res.redirect(client.url + '/onboard');
     }
   }
 
