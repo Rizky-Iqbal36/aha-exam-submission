@@ -4,13 +4,21 @@ import appConfig from "../config";
 class BackendInteractor {
   private client: AxiosInstance;
 
-  constructor() {
+  constructor(public accessToken?: string) {
     this.client = axios.create({
       baseURL: appConfig.apis.backendURI,
+      ...(accessToken && {
+        headers: {
+          ["Authorization"]: `Bearer ${accessToken}`,
+        },
+      }),
     });
   }
 
+
+
   public async login(payload: { email: string; password: string }) {
+    
     return this.client
       .post("/auth/login", payload, {
         headers: {
@@ -19,8 +27,10 @@ class BackendInteractor {
       })
       .then((res) => res.data);
   }
+
+  public async profile() {
+    return this.client.get("/user/profile").then((res) => res.data);
+  }
 }
 
-const backendInteractor = new BackendInteractor();
-
-export default backendInteractor;
+export default BackendInteractor;
