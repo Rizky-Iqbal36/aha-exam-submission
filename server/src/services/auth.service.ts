@@ -110,7 +110,7 @@ export class AuthService {
     const { raw } = await this.userRepository.upsert(
       {
         email,
-        name,
+        name: user ? user.name : name,
         profilePicture,
         loginCount: user ? user.loginCount + 1 : 1,
         emailVerificationDate: !user ? () => 'NOW()' : user.emailVerificationDate,

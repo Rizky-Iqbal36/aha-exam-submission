@@ -65,6 +65,7 @@ const Dashboard = () => {
   return (
     <div className="App">
       <div className="App-header">
+        <button onClick={() => navigate("/profile")}>Profile</button>
         {isEmailVerified ? (
           loading ? (
             <div>LOADING ...</div>

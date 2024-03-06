@@ -7,6 +7,7 @@ import PrivateRoute from "./app/context/PrivateRoute";
 import LandingPage from "./pages/landingPage";
 import Dashboard from "./pages/dashboard";
 import Onboard from "./pages/onboard";
+import Profile from "./pages/profile";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
           <Route path="/onboard" element={<Onboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>

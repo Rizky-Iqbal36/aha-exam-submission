@@ -30,6 +30,10 @@ class BackendInteractor {
     return this.client.get("/user/profile").then((res) => res.data);
   }
 
+  public async editProfile(payload: { name: string }) {
+    return this.client.post("/user/profile", payload).then((res) => res.data);
+  }
+
   public async users(): Promise<
     {
       id: number;

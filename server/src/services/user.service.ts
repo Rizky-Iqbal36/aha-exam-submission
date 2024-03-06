@@ -35,6 +35,10 @@ export class UserService {
     };
   }
 
+  public async editProfile(payload: { name: string }, { id }: IResponse['locals']['user']) {
+    return { message: 'Success', payload };
+  }
+
   public async profile({ email, isEmailVerified }: IResponse['locals']['user']) {
     let user = (await this.userRepository.findOne({ select: ['email', 'name', 'profilePicture'], where: { email } })) as UserModel;
     return { ...user, isEmailVerified };
