@@ -1,4 +1,5 @@
 import { Request, NextFunction } from 'express';
+import { Raw } from 'typeorm';
 
 import { NestMiddleware, Injectable } from '@nestjs/common';
 
@@ -9,10 +10,14 @@ import { Unauthorized, BadRequest, Forbidden } from '@app/exception';
 import cryptography from '@app/utils/cryptography';
 
 import UserRepository from '@repository/user.repository';
+import UserSessionRepository from '@repository/userSession.repository';
 
 @Injectable()
 export default class AuthMiddleware implements NestMiddleware {
-  constructor(private readonly userRepositry: UserRepository) {}
+  constructor(
+    private readonly userRepositry: UserRepository,
+    private readonly userSessionRepository: UserSessionRepository
+  ) {}
 
   async use(req: Request, res: IResponse, next: NextFunction) {
     let header, token;
@@ -29,7 +34,12 @@ export default class AuthMiddleware implements NestMiddleware {
           email: user.email,
           isEmailVerified: !!user.emailVerificationDate,
         };
-        this.userRepositry.update({ id: user.id }, { lastSessionDate: () => 'NOW()' });
+        const sessionRecord = await this.userSessionRepository.findOne({ where: { token, recordCreated: Raw('DATE(NOW())') } });
+        await this.userSessionRepository.upsert({ userId: Number(user.id), recordCreated: () => 'CURRENT_DATE()', token, used: sessionRecord?.used ? sessionRecord.used + 1 : 1 }, [
+          'userId',
+          'recordCreated',
+          'token',
+        ]);
       }
     } catch (err: any) {
       throw new BadRequest({ flag: EFlag.INVALID_JWT, reason: err.message }, { message: 'Invalid Token' });
