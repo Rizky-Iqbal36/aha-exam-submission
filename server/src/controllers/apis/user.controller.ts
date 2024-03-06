@@ -20,4 +20,9 @@ export class UserController extends BaseController {
   public async profile(@Res() res: IResponse) {
     return this.userService.profile(res.locals.user);
   }
+
+  @Get('statistic')
+  public async statistic(){
+    return this.userService.statistic()
+  }
 }

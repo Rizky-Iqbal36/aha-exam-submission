@@ -12,6 +12,7 @@ import Paper from "@mui/material/Paper";
 
 import BackendInteractor from "../app/api";
 import { useAuth } from "../app/context/AuthProvider";
+import Statistic from "../components/molekul/statistic";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -68,66 +69,69 @@ const Dashboard = () => {
           loading ? (
             <div>LOADING ...</div>
           ) : (
-            <div style={{ height: 400, width: "80%" }}>
-              <TableContainer component={Paper}>
-                <Table sx={{ minWidth: 700 }} aria-label="customized table">
-                  <TableHead>
-                    <TableRow>
-                      <StyledTableCell align="center">Email</StyledTableCell>
-                      <StyledTableCell align="center">Name</StyledTableCell>
-                      <StyledTableCell align="center">
-                        Total Login
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Last Session Date
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Email Verification Date
-                      </StyledTableCell>
-                      <StyledTableCell align="center">
-                        Registration Date
-                      </StyledTableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {users?.map(
-                      ({
-                        id,
-                        email,
-                        name,
-                        totalLogin,
-                        lastSessionDate,
-                        emailVerificationDate,
-                        registrationDate,
-                      }) => {
-                        return (
-                          <StyledTableRow key={id}>
-                            <StyledTableCell component="th" scope="row">
-                              {email}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              {name}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              {totalLogin}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              {lastSessionDate}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              {emailVerificationDate}
-                            </StyledTableCell>
-                            <StyledTableCell align="right">
-                              {registrationDate}
-                            </StyledTableCell>
-                          </StyledTableRow>
-                        );
-                      }
-                    )}
-                  </TableBody>
-                </Table>
-              </TableContainer>
-            </div>
+            <>
+              <Statistic />
+              <div style={{ height: 400, width: "80%", margin: 20 }}>
+                <TableContainer component={Paper}>
+                  <Table sx={{ minWidth: 700 }} aria-label="customized table">
+                    <TableHead>
+                      <TableRow>
+                        <StyledTableCell align="center">Email</StyledTableCell>
+                        <StyledTableCell align="center">Name</StyledTableCell>
+                        <StyledTableCell align="center">
+                          Total Login
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Last Session Date
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Email Verification Date
+                        </StyledTableCell>
+                        <StyledTableCell align="center">
+                          Registration Date
+                        </StyledTableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {users?.map(
+                        ({
+                          id,
+                          email,
+                          name,
+                          totalLogin,
+                          lastSessionDate,
+                          emailVerificationDate,
+                          registrationDate,
+                        }) => {
+                          return (
+                            <StyledTableRow key={id}>
+                              <StyledTableCell component="th" scope="row">
+                                {email}
+                              </StyledTableCell>
+                              <StyledTableCell align="right">
+                                {name}
+                              </StyledTableCell>
+                              <StyledTableCell align="right">
+                                {totalLogin}
+                              </StyledTableCell>
+                              <StyledTableCell align="right">
+                                {lastSessionDate}
+                              </StyledTableCell>
+                              <StyledTableCell align="right">
+                                {emailVerificationDate}
+                              </StyledTableCell>
+                              <StyledTableCell align="right">
+                                {registrationDate}
+                              </StyledTableCell>
+                            </StyledTableRow>
+                          );
+                        }
+                      )}
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+              </div>
+            </>
           )
         ) : (
           <p id="not-allowed" style={{ textAlign: "center" }}>

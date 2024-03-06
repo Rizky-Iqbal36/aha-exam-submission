@@ -50,6 +50,10 @@ class BackendInteractor {
       .get("/email/resend-verification")
       .then((res) => res.data);
   }
+
+  public async usersStatistic() {
+    return this.client.get("/user/statistic").then((res) => res.data);
+  }
 }
 
 export default BackendInteractor;
