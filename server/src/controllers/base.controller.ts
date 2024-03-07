@@ -7,6 +7,7 @@ export class BaseController {
   public async validateReq(schema: ObjectSchema, payload: any, flag: EFlag = EFlag.INVALID_BODY) {
     const validationError: any = await this.getValidationErrors(schema, payload);
     if (validationError) throw new BadRequest({ flag, reason: validationError[0].message }, { message: 'Invalid Payload' });
+    return true;
   }
 
   public async getValidationErrors(schema: ObjectSchema, args: any) {

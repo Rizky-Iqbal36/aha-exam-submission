@@ -1,33 +1,26 @@
 import React from "react";
-import "./App.css";
+import { Routes, Route } from "react-router-dom";
 
-function getGoogleOAuthURL() {
-  const rootUrl = "https://accounts.google.com/o/oauth2/v2/auth";
+import AuthProvider from "./app/context/AuthProvider";
+import PrivateRoute from "./app/context/PrivateRoute";
 
-  const options = {
-    redirect_uri: process.env.REACT_APP_GOOGLE_OAUTH_REDIRECT_URL,
-    client_id: process.env.REACT_APP_GOOGLE_CLIENT_ID,
-    access_type: "offline",
-    response_type: "code",
-    prompt: "consent",
-    scope: [
-      "https://www.googleapis.com/auth/userinfo.profile",
-      "https://www.googleapis.com/auth/userinfo.email",
-    ].join(" "),
-  };
-
-  const qs = new URLSearchParams(options as any);
-
-  return `${rootUrl}?${qs.toString()}`;
-}
+import LandingPage from "./pages/landingPage";
+import Dashboard from "./pages/dashboard";
+import Onboard from "./pages/onboard";
+import Profile from "./pages/profile";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <a href={getGoogleOAuthURL()}>Login with Google</a>
-      </header>
-    </div>
+    <AuthProvider>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route element={<PrivateRoute />}>
+          <Route path="/profile" element={<Profile />} />
+          <Route path="/onboard" element={<Onboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </AuthProvider>
   );
 }
 

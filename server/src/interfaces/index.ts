@@ -11,7 +11,7 @@ export type IObjMerger<T> = IObject & T;
 /* ------------------------ Request Response Related ------------------------ */
 export interface IResponse extends Response {
   locals: IObjMerger<{
-    user: { id: number; email: string; isEmailVerified: boolean };
+    user: { id: number; email: string; isEmailVerified: boolean; token: string };
   }>;
 }
 /* --------------------- End of Request Response Related -------------------- */

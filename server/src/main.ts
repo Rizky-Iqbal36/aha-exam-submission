@@ -9,6 +9,7 @@ import TransformInterceptor from '@app/interceptor';
 const logger = new Logger();
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors()
   app.useGlobalInterceptors(new TransformInterceptor());
   await app.listen(appConfig.app.port, async () => {
     logger.debug(`🚀 Server ready at port: ${appConfig.app.port}`);

@@ -12,14 +12,15 @@ const { client } = appConfig;
 
 import { BaseController } from '../base.controller';
 import { IResponse } from '@root/src/interfaces';
+import { BadRequest } from '@app/exception';
 
-@Controller('auth')
+@Controller()
 export class AuthenticationController extends BaseController {
   constructor(private readonly authService: AuthService) {
     super();
   }
 
-  @Post('register')
+  @Post('auth/register')
   public async register(@Req() req: Request) {
     const body = req.body;
     body.password = (body?.password ?? '').trim();
@@ -32,8 +33,8 @@ export class AuthenticationController extends BaseController {
     return this.authService.register(body);
   }
 
-  @Post('login')
-  public async login(@Req() req: Request) {
+  @Post('auth/login')
+  public async login(@Req() req: Request, @Res() res: IResponse) {
     const body = req.body;
     const validationSchema: ObjectSchema = Joi.object({
       email: Joi.string().email().required(),
@@ -44,21 +45,77 @@ export class AuthenticationController extends BaseController {
     return this.authService.login(body);
   }
 
-  @Get('oauth')
+  @Get('auth/oauth')
   public async oauthHandler(@Req() req: Request, @Res() res: IResponse) {
     const query = req.query as any;
     const validationSchema: ObjectSchema = Joi.object({
       code: Joi.string().required(),
     }).unknown();
-    await this.validateReq(validationSchema, query, EFlag.INVALID_PARAM);
-
-    const token = await this.authService.oauthHandler(query);
-    res.cookie('accessToken', token);
-    res.redirect(client.url + '/dashboard');
+    const validation = await this.validateReq(validationSchema, query, EFlag.INVALID_PARAM).catch((err) => {
+      res.redirect(client.url);
+      return false;
+    });
+    if (validation) {
+      const token = await this.authService.oauthHandler(query);
+      res.cookie('accessToken', token);
+      res.redirect(client.url + '/onboard');
+    }
   }
 
-  @Get('verification')
-  public async verification(@Req() req: Request) {
+  @Get('logout')
+  public async logout(@Res() res: IResponse) {
+    // Flow terminate token
+    // const token = res.locals.user.token
+    return {
+      message: 'Success',
+    };
+  }
+
+  @Get('email/resend-verification')
+  public async resendVerification(@Res() res: IResponse) {
+    return this.authService.resendVerification(res.locals.user);
+  }
+
+  @Post('password/reset')
+  public async resetPassword(@Req() req: Request, @Res() res: IResponse) {
+    const body = req.body;
+    body.currentPassword = (body?.currentPassword ?? '').trim();
+    body.newPassword = (body?.newPassword ?? '').trim();
+    body.confirmPassword = (body?.confirmPassword ?? '').trim();
+
+    if (body.newPassword !== body.confirmPassword)
+      throw new BadRequest({ flag: EFlag.BAD_REQUEST, reason: 'password not same' }, { message: 'New Password And confirm Password are not the same' });
+
+    const validationSchema: ObjectSchema = Joi.object({
+      currentPassword: Joi.string().min(8).required(),
+      newPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+      confirmPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+    }).unknown();
+    await this.validateReq(validationSchema, body, EFlag.INVALID_BODY);
+
+    return this.authService.resetPassword(body, res.locals.user);
+  }
+
+  @Post('password/set')
+  public async setPassword(@Req() req: Request, @Res() res: IResponse) {
+    const body = req.body;
+    body.newPassword = (body?.newPassword ?? '').trim();
+    body.confirmPassword = (body?.confirmPassword ?? '').trim();
+
+    if (body.newPassword !== body.confirmPassword)
+      throw new BadRequest({ flag: EFlag.BAD_REQUEST, reason: 'password not same' }, { message: 'New Password And confirm Password are not the same' });
+
+    const validationSchema: ObjectSchema = Joi.object({
+      newPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+      confirmPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+    }).unknown();
+    await this.validateReq(validationSchema, body, EFlag.INVALID_BODY);
+
+    return this.authService.setPassword(body, res.locals.user);
+  }
+
+  @Get('auth/sign-verification')
+  public async signVerification(@Req() req: Request, @Res() res: IResponse) {
     const query = req.query;
     const validationSchema: ObjectSchema = Joi.object({
       signature: Joi.string().required(),
@@ -67,6 +124,8 @@ export class AuthenticationController extends BaseController {
     const signature = query.signature as string;
     const { email } = cryptography.verifyToken(signature) as any;
 
-    return this.authService.verification({ email });
+    const { token } = await this.authService.verification({ email });
+    res.cookie('accessToken', token);
+    res.redirect(client.url + '/onboard');
   }
 }

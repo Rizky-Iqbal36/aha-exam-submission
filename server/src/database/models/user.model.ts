@@ -6,28 +6,28 @@ export default class UserModel {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: null })
+  @Column({ nullable: true, default: null })
   name: string;
 
   @Column()
   email: string;
 
-  @Column({ default: null })
+  @Column({ nullable: true, default: null })
   password: string;
 
-  @Column({ default: null })
+  @Column({ nullable: true, default: null })
   salt: string;
 
   @Column({ default: 0 })
   loginCount: number;
 
-  @Column({ default: null })
+  @Column({ nullable: true, default: null })
   profilePicture: string;
 
-  @Column({ type: 'timestamp' })
+  @Column({ type: 'timestamp', nullable: true, default: null })
   lastLoginDate: string;
 
-  @Column({ type: 'timestamp', default: null, nullable: true })
+  @Column({ type: 'timestamp', nullable: true, default: null })
   emailVerificationDate: string | null;
 
   @UpdateDateColumn({ type: 'timestamp' })
