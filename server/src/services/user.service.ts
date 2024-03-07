@@ -41,8 +41,10 @@ export class UserService {
   }
 
   public async profile({ email, isEmailVerified }: IResponse['locals']['user']) {
-    let user = (await this.userRepository.findOne({ select: ['email', 'name', 'profilePicture'], where: { email } })) as UserModel;
-    return { ...user, isEmailVerified };
+    const user = (await this.userRepository.findOne({ select: ['email', 'name', 'profilePicture', 'password'], where: { email } })) as UserModel;
+    let userData: any = _.omit(user, ['password']);
+    userData.pwSet = !!user.password;
+    return { ...userData, isEmailVerified };
   }
 
   public async statistic() {

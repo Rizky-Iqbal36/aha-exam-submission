@@ -87,6 +87,24 @@ export class AuthenticationController extends BaseController {
     return this.authService.resetPassword(body, res.locals.user);
   }
 
+  @Post('password/set')
+  public async setPassword(@Req() req: Request, @Res() res: IResponse) {
+    const body = req.body;
+    body.newPassword = (body?.newPassword ?? '').trim();
+    body.confirmPassword = (body?.confirmPassword ?? '').trim();
+
+    if (body.newPassword !== body.confirmPassword)
+      throw new BadRequest({ flag: EFlag.BAD_REQUEST, reason: 'password not same' }, { message: 'New Password And confirm Password are not the same' });
+
+    const validationSchema: ObjectSchema = Joi.object({
+      newPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+      confirmPassword: Joi.string().min(8).checkUppercase(1).checkLowercase(1).checkDigit(1).checkSpecial(1).required(),
+    }).unknown();
+    await this.validateReq(validationSchema, body, EFlag.INVALID_BODY);
+
+    return this.authService.setPassword(body, res.locals.user);
+  }
+
   @Get('auth/sign-verification')
   public async signVerification(@Req() req: Request, @Res() res: IResponse) {
     const query = req.query;

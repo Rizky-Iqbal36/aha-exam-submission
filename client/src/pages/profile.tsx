@@ -47,16 +47,24 @@ const Profile = () => {
     touched: touchedPass,
   } = useFormik({
     initialValues: {
-      currentPassword: "",
+      ...(user.pwSet && {
+        currentPassword: "",
+      }),
       newPassword: "",
       confirmPassword: "",
+    } as {
+      currentPassword?: string;
+      newPassword: string;
+      confirmPassword: string;
     },
     validationSchema: Yup.object({
-      currentPassword: Yup.string().required("required").min(8),
+      ...(user.pwSet && {
+        currentPassword: Yup.string().required("required").min(8),
+      }),
       newPassword: Yup.string().required("required").min(8),
       confirmPassword: Yup.string().required("required").min(8),
     }),
-    onSubmit: (values, { resetForm }) => {
+    onSubmit: (values) => {
       if (values.newPassword !== values.confirmPassword)
         window.alert("New Password And confirm Password are not the same");
       else {
@@ -66,10 +74,18 @@ const Profile = () => {
   });
 
   const { mutate: submitPass, isLoading: isLoadingPass } = useMutation(
-    async (payload: any) => backendInteractor.resetPassword(payload),
+    async (payload: any) =>
+      user.pwSet
+        ? backendInteractor.resetPassword(payload)
+        : backendInteractor.setPassword(payload),
     {
       async onSuccess() {
         window.alert("Success reset password");
+        if (!user.pwSet) {
+          user.pwSet = true;
+          localStorage.setItem("user", JSON.stringify(user));
+          setUser(user);
+        }
       },
       onError(err: any) {
         const data = err.response.data;
@@ -130,7 +146,7 @@ const Profile = () => {
               borderRadius: 5,
             }}
           >
-            <div>Reset Password</div>
+            <div>{user.pwSet ? "Reset Password" : "Set Password"}</div>
             <form
               onSubmit={handleSubmitPass}
               style={{
@@ -140,22 +156,31 @@ const Profile = () => {
                 justifyContent: "center",
               }}
             >
-              <input
-                type="text"
-                placeholder="Current Password"
-                {...getFieldPropsPass("currentPassword")}
-                style={{ margin: 10 }}
-              />
-              {touchedPass.currentPassword && errorsPass.currentPassword ? (
-                <p
-                  style={{ color: "red", fontSize: 16, padding: 0, margin: 0 }}
-                >
-                  {errorsPass.currentPassword}
-                </p>
-              ) : null}
+              {user.pwSet && (
+                <>
+                  <input
+                    type="text"
+                    placeholder="Current Password"
+                    {...getFieldPropsPass("currentPassword")}
+                    style={{ margin: 10 }}
+                  />
+                  {touchedPass.currentPassword && errorsPass.currentPassword ? (
+                    <p
+                      style={{
+                        color: "red",
+                        fontSize: 16,
+                        padding: 0,
+                        margin: 0,
+                      }}
+                    >
+                      {errorsPass.currentPassword}
+                    </p>
+                  ) : null}
+                </>
+              )}
               <input
                 type="password"
-                placeholder="New Password"
+                placeholder={user.pwSet ? "New Password" : "Set Password"}
                 {...getFieldPropsPass("newPassword")}
                 style={{ margin: 10 }}
               />

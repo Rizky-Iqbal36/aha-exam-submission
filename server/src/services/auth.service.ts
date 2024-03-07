@@ -43,6 +43,7 @@ export class AuthService {
         name: null,
         email,
         profilePicture: null,
+        pwSet: true,
         isEmailVerified: false,
       },
       token,
@@ -63,6 +64,7 @@ export class AuthService {
 
     let userData: any = _.omit(user, ['id', 'emailVerificationDate', 'password', 'loginCount']);
     userData.isEmailVerified = !!user.emailVerificationDate;
+    userData.pwSet = !!user.password;
 
     return { message: 'Login Success', user: userData, token };
   }
@@ -109,6 +111,17 @@ export class AuthService {
 
     const comparePw = cryptography.comparePassword(currentPassword, user.password);
     if (!comparePw) throw new Unauthorized({ reason: 'Incorrect password.' });
+
+    const { hashedPassword, salt } = cryptography.hashPassword(newPassword);
+    await this.userRepository.update({ id }, { password: hashedPassword, salt });
+    return {
+      message: 'Success',
+    };
+  }
+
+  public async setPassword({ newPassword }: { currentPassword: string; newPassword: string }, { id }: IResponse['locals']['user']) {
+    const user = (await this.userRepository.findOne({ select: ['id', 'password'], where: { id } })) as UserModel;
+    if (user.password) throw new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'User already set password' });
 
     const { hashedPassword, salt } = cryptography.hashPassword(newPassword);
     await this.userRepository.update({ id }, { password: hashedPassword, salt });
