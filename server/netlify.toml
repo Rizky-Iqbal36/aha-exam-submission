@@ -1,0 +1,11 @@
+[build]
+  command = "npm i"
+  functions = "dist"
+
+[[redirects]]
+  from = "/*"
+  to = "/.netlify/functions/main/:splat"
+  status = 200
+
+[ignore]
+  files = ["src/**", "resources/**", "node_modules/**"]

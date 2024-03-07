@@ -7,8 +7,10 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
+    "deploy:netlify": "nest build && netlify deploy --prod",
     "format": "eslint --fix . && prettier --write .",
     "start": "nest start",
+    "start:netlify:dev": "nest build && netlify dev",
     "start:containers": "docker-compose up -d mysql_db",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
@@ -37,6 +39,7 @@
     "mysql": "^2.18.1",
     "reflect-metadata": "^0.2.0",
     "rxjs": "^7.8.1",
+    "serverless-http": "^3.2.0",
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
