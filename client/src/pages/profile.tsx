@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
+import DefaultPP from "../assets/default-pp.jpg";
 import BackendInteractor from "../app/api";
 import { useMutation } from "react-query";
 import { useAuth } from "../app/context/AuthProvider";
@@ -39,16 +40,62 @@ const Profile = () => {
     }
   );
 
+  const {
+    handleSubmit: handleSubmitPass,
+    getFieldProps: getFieldPropsPass,
+    errors: errorsPass,
+    touched: touchedPass,
+  } = useFormik({
+    initialValues: {
+      currentPassword: "",
+      newPassword: "",
+      confirmPassword: "",
+    },
+    validationSchema: Yup.object({
+      currentPassword: Yup.string().required("required").min(8),
+      newPassword: Yup.string().required("required").min(8),
+      confirmPassword: Yup.string().required("required").min(8),
+    }),
+    onSubmit: (values, { resetForm }) => {
+      if (values.newPassword !== values.confirmPassword)
+        window.alert("New Password And confirm Password are not the same");
+      else {
+        submitPass(values);
+      }
+    },
+  });
+
+  const { mutate: submitPass, isLoading: isLoadingPass } = useMutation(
+    async (payload: any) => backendInteractor.resetPassword(payload),
+    {
+      async onSuccess() {
+        window.alert("Success reset password");
+      },
+      onError(err: any) {
+        const data = err.response.data;
+        window.alert(data?.details?.reason ?? data.desc);
+      },
+    }
+  );
+
   return (
     <div className="App">
       <div className="App-header">
-        <div style={{ textAlign: "center", justifyContent: "center" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            textAlign: "center",
+            justifyItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <img
-            src={user.profilePicture}
+            src={user?.profilePicture ?? DefaultPP}
             alt="pp"
             width="50"
             height="50"
-            style={{ borderRadius: 25 }}
+            style={{ borderRadius: 50, padding: 10, alignSelf: "center" }}
           />
           <form
             onSubmit={handleSubmit}
@@ -57,8 +104,10 @@ const Profile = () => {
               flexDirection: "column",
               alignItems: "center",
               justifyContent: "center",
+              padding: 25,
             }}
           >
+            <label>Name:</label>
             <input type="text" {...getFieldProps("name")} />
             {touched.name && errors.name ? (
               <p style={{ color: "red", fontSize: 16, padding: 0, margin: 0 }}>
@@ -69,6 +118,76 @@ const Profile = () => {
               {isLoading ? "Loading" : "Submit"}
             </button>
           </form>
+          <div
+            style={{
+              alignSelf: "center",
+              width: "120%",
+              height: "30%",
+              padding: 25,
+              flexGrow: 1,
+              textAlign: "center",
+              boxShadow: "rgba(0, 0, 0, 0.35) 0px 5px 15px",
+              borderRadius: 5,
+            }}
+          >
+            <div>Reset Password</div>
+            <form
+              onSubmit={handleSubmitPass}
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <input
+                type="text"
+                placeholder="Current Password"
+                {...getFieldPropsPass("currentPassword")}
+                style={{ margin: 10 }}
+              />
+              {touchedPass.currentPassword && errorsPass.currentPassword ? (
+                <p
+                  style={{ color: "red", fontSize: 16, padding: 0, margin: 0 }}
+                >
+                  {errorsPass.currentPassword}
+                </p>
+              ) : null}
+              <input
+                type="password"
+                placeholder="New Password"
+                {...getFieldPropsPass("newPassword")}
+                style={{ margin: 10 }}
+              />
+              {touchedPass.newPassword && errorsPass.newPassword ? (
+                <p
+                  style={{ color: "red", fontSize: 16, padding: 0, margin: 0 }}
+                >
+                  {errorsPass.newPassword}
+                </p>
+              ) : null}
+              <input
+                type="password"
+                placeholder="Confirm Password"
+                {...getFieldPropsPass("confirmPassword")}
+                style={{ margin: 10 }}
+              />
+              {touchedPass.confirmPassword && errorsPass.confirmPassword ? (
+                <p
+                  style={{ color: "red", fontSize: 16, padding: 0, margin: 0 }}
+                >
+                  {errorsPass.confirmPassword}
+                </p>
+              ) : null}
+              <button
+                type="submit"
+                style={{ margin: 5 }}
+                disabled={isLoadingPass}
+              >
+                {isLoadingPass ? "Loading" : "Submit"}
+              </button>
+            </form>
+          </div>
         </div>
       </div>
     </div>

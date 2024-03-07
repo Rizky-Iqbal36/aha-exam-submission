@@ -5,12 +5,13 @@ import cryptography from '@app/utils/cryptography';
 import sendGrid from '@app/providers/sendGrid';
 import googleOAuth from '@app/providers/googleOAuth';
 import appConfig from '@app/config';
-import { BadRequest, NotFound } from '@app/exception';
+import { BadRequest, NotFound, Unauthorized } from '@app/exception';
 const { app } = appConfig;
 
 import UserRepository from '@repository/user.repository';
 import { EFlag } from '@src/interfaces/enum';
 import { IResponse } from '../interfaces';
+import UserModel from '../database/models/user.model';
 
 type TAuth = { email: string; password: string };
 @Injectable()
@@ -99,6 +100,20 @@ export class AuthService {
     });
     return {
       message: 'Email Sent, Please check your inbox',
+    };
+  }
+
+  public async resetPassword({ currentPassword, newPassword }: { currentPassword: string; newPassword: string }, { id }: IResponse['locals']['user']) {
+    const user = (await this.userRepository.findOne({ select: ['id', 'password'], where: { id } })) as UserModel;
+    if (!user.password) throw new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'User doesnt set password yet' });
+
+    const comparePw = cryptography.comparePassword(currentPassword, user.password);
+    if (!comparePw) throw new Unauthorized({ reason: 'Incorrect password.' });
+
+    const { hashedPassword, salt } = cryptography.hashPassword(newPassword);
+    await this.userRepository.update({ id }, { password: hashedPassword, salt });
+    return {
+      message: 'Success',
     };
   }
 

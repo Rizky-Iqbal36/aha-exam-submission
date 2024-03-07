@@ -34,6 +34,14 @@ class BackendInteractor {
     return this.client.post("/user/profile", payload).then((res) => res.data);
   }
 
+  public async resetPassword(payload: {
+    currentPassword: string;
+    newPassword: string;
+    confirmPassword: string;
+  }) {
+    return this.client.post("/password/reset", payload).then((res) => res.data);
+  }
+
   public async users(): Promise<
     {
       id: number;
