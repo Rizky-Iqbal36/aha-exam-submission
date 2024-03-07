@@ -62,6 +62,15 @@ export class AuthenticationController extends BaseController {
     }
   }
 
+  @Get('logout')
+  public async logout(@Res() res: IResponse) {
+    // Flow terminate token
+    // const token = res.locals.user.token
+    return {
+      message: 'Success',
+    };
+  }
+
   @Get('email/resend-verification')
   public async resendVerification(@Res() res: IResponse) {
     return this.authService.resendVerification(res.locals.user);

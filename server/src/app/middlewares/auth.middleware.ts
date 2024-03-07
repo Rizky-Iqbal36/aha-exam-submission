@@ -33,6 +33,7 @@ export default class AuthMiddleware implements NestMiddleware {
           id: user.id,
           email: user.email,
           isEmailVerified: !!user.emailVerificationDate,
+          token,
         };
         const sessionRecord = await this.userSessionRepository.findOne({ where: { token, recordCreated: Raw('DATE(NOW())') } });
         await this.userSessionRepository.upsert({ userId: Number(user.id), recordCreated: () => 'CURRENT_DATE()', token, used: sessionRecord?.used ? sessionRecord.used + 1 : 1 }, [

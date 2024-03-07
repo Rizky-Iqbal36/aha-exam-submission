@@ -26,6 +26,10 @@ class BackendInteractor {
       .then((res) => res.data);
   }
 
+  public async logout() {
+    return this.client.get("/logout").then((res) => res.data);
+  }
+
   public async profile() {
     return this.client.get("/user/profile").then((res) => res.data);
   }

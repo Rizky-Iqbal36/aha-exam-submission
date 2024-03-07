@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
+import { useMutation } from "react-query";
 
 import DefaultPP from "../assets/default-pp.jpg";
 import BackendInteractor from "../app/api";
-import { useMutation } from "react-query";
 import { useAuth } from "../app/context/AuthProvider";
+import LogoutButton from "../components/atom/logoutButton";
 
 const Profile = () => {
   const [user, setUser] = useState(
@@ -213,6 +214,7 @@ const Profile = () => {
               </button>
             </form>
           </div>
+          <LogoutButton />
         </div>
       </div>
     </div>
