@@ -35,8 +35,9 @@ export class UserService {
     };
   }
 
-  public async editProfile(payload: { name: string }, { id }: IResponse['locals']['user']) {
-    return { message: 'Success', payload };
+  public async editProfile({ name }: { name: string }, { id }: IResponse['locals']['user']) {
+    await this.userRepository.update({ id }, { name });
+    return { message: 'Success' };
   }
 
   public async profile({ email, isEmailVerified }: IResponse['locals']['user']) {
