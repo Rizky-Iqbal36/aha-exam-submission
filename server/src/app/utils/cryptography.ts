@@ -1,5 +1,5 @@
 import appConfig from '@app/config';
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 const { auth } = appConfig;
 

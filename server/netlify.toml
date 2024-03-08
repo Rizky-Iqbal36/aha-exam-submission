@@ -1,11 +1,8 @@
 [build]
-  command = "npm i"
+  command = "npm install && npm run build"
   functions = "dist"
 
 [[redirects]]
   from = "/*"
   to = "/.netlify/functions/main/:splat"
   status = 200
-
-[ignore]
-  files = ["src/**", "resources/**", "node_modules/**"]

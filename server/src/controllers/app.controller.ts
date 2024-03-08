@@ -8,8 +8,8 @@ export class AppController {
   @Get('/health')
   public async healthCheck() {
     return {
-      name: appConfig.app.name,
-      version: appConfig.app.version,
+      // name: appConfig.app.name,
+      // version: appConfig.app.version,
       environment: appConfig.app.env,
       uptime: moment.duration(process.uptime(), 'seconds').format('h [hrs] : m [min] : s [sec]', { trim: false }),
     };

@@ -17,6 +17,9 @@ import repositories from '@src/repositories';
 })
 export class AppModule {
   async configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude({ path: '/auth/(.*)', method: RequestMethod.ALL }).forRoutes({ path: '*', method: RequestMethod.ALL });
+    consumer
+      .apply(AuthMiddleware)
+      .exclude({ path: '/auth/(.*)', method: RequestMethod.ALL }, { path: '/health', method: RequestMethod.ALL })
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }
