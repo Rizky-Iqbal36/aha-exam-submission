@@ -65,12 +65,12 @@ const Dashboard = () => {
   return (
     <div className="App">
       <div className="App-header">
-        <button onClick={() => navigate("/profile")}>Profile</button>
         {isEmailVerified ? (
           loading ? (
             <div>LOADING ...</div>
           ) : (
             <>
+              <button onClick={() => navigate("/profile")}>Profile</button>
               <Statistic />
               <div style={{ height: 400, width: "80%", margin: 20 }}>
                 <TableContainer component={Paper}>
