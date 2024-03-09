@@ -89,7 +89,9 @@ export class AuthService {
     };
   }
 
-  public async resendVerification({ email }: IResponse['locals']['user']) {
+  public async resendVerification({ email, isEmailVerified }: IResponse['locals']['user']) {
+    if (isEmailVerified) throw new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'Email Already verified' });
+
     const signature = cryptography.createSignature({ email });
     await sendGrid.sendEmail({
       recipient: email,
