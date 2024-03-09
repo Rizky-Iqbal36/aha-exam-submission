@@ -5,7 +5,6 @@ import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EDbPrefix } from '@root/src/interfaces/enum';
 // import pjson from '@root/package.json'
 // const pjson = require(join(process.cwd(), 'package.json'));
-
 config();
 const validNodeEnv = ['development', 'test', 'staging', 'production'];
 
