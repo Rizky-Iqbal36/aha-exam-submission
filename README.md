@@ -76,3 +76,8 @@ npm run start:prod
 ### Tools
 * Sendgrid, SMTP service to deliver email
 * Netlify, Server hosting
+
+### CORS
+The app is enabling cors and only allow two origins which is:
+* https://ikbal-aha-exam.netlify.app, Client Side
+* https://iqbaldev-api-doc.stoplight.io, APIs documentation
