@@ -11,6 +11,7 @@ const validNodeEnv = ['development', 'test', 'staging', 'production'];
 const appConfig = {
   cpuSize: os.cpus().length,
   app: {
+    allowedOrigins: ((process.env.CORS_ORIGINS as string) ?? '*').split(','),
     url: process.env.APP_URL as string,
     // name: pjson.name,
     // version: pjson.version,
