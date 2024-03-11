@@ -8,7 +8,7 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
-    "deploy:netlify": "nest build && netlify deploy --prod",
+    "deploy:netlify": "nest build && echo '.' | netlify deploy --prod",
     "format": "eslint --fix . && prettier --write .",
     "start": "nest start",
     "start:netlify:dev": "npm run build && netlify dev",

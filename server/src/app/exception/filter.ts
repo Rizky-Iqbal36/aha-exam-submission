@@ -1,16 +1,19 @@
-import { Response } from 'express';
+import { Request } from 'express';
 import _ from 'lodash';
-import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus } from '@nestjs/common';
+import { ExceptionFilter, Catch, ArgumentsHost, HttpException, HttpStatus, Logger } from '@nestjs/common';
 
 import { EFlag } from '@src/interfaces/enum';
 
 import { CustomHttpException } from '@app/exception';
+import { IResponse } from '@src/interfaces';
 
 @Catch(HttpException, Error)
 export default class ExceptionsFilter implements ExceptionFilter {
   catch(exception: HttpException | Error, host: ArgumentsHost) {
+    const logger = new Logger();
     const ctx = host.switchToHttp();
-    const res = ctx.getResponse<Response>();
+    const req = ctx.getRequest<Request>();
+    const res = ctx.getResponse<IResponse>();
 
     let status = HttpStatus.INTERNAL_SERVER_ERROR;
     let errors;
@@ -47,6 +50,10 @@ export default class ExceptionsFilter implements ExceptionFilter {
     }
 
     status >= 300 ? ((result = undefined), (errors = { ...errors, statusCode: status })) : (errors = undefined);
+    const logPayload = [req.ip, req.method, req.url, status, req.body, !res.headersSent ? result : {}, res.locals, req.header('Authorization')]
+      .map((value) => JSON.stringify(value))
+      .join('|');
+    logger.debug(logPayload);
     if (!res.headersSent)
       res.status(status).json({
         ...(typeof result === 'object' ? (result as object) : { result }),

@@ -1,18 +1,36 @@
 import React, { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Cookies } from "react-cookie";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 import { useAuth } from "../app/context/AuthProvider";
 import BackendInteractor from "../app/api";
 
 const Onboard = () => {
-  const context = useAuth();
-  const backendInteractor = new BackendInteractor(context.token);
   const navigate = useNavigate();
+  const [searchParam] = useSearchParams();
+  const token = searchParam.get("token") ?? "";
+  const context = useAuth();
   useEffect(() => {
-    backendInteractor.profile().then((data) => {
-      localStorage.setItem("user", JSON.stringify(data));
-      navigate("/dashboard");
-    });
+    if (!token) {
+      window.alert("Token Required");
+      navigate("/");
+    }
+
+    const backendInteractor = new BackendInteractor(token);
+    backendInteractor
+      .profile()
+      .then((data) => {
+        const cookies = new Cookies();
+        context.setToken(token);
+        cookies.set("accessToken", token);
+        localStorage.setItem("user", JSON.stringify(data));
+        navigate("/dashboard");
+      })
+      .catch((err) => {
+        const data = err.response.data;
+        window.alert(data.desc);
+        navigate("/");
+      });
   }, []);
   return <div>OnBoarding you please wait</div>;
 };

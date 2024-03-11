@@ -14,9 +14,9 @@ function App() {
     <AuthProvider>
       <Routes>
         <Route path="/" element={<LandingPage />} />
+        <Route path="/onboard" element={<Onboard />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
-          <Route path="/onboard" element={<Onboard />} />
           <Route path="/dashboard" element={<Dashboard />} />
         </Route>
       </Routes>
