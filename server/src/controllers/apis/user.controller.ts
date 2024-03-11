@@ -1,12 +1,13 @@
 import Joi, { ObjectSchema } from 'joi';
 import { Request } from 'express';
-import { Controller, Get, Post, Req, Res } from '@nestjs/common';
+import { Controller, Get, Post, Req, Res, UseGuards } from '@nestjs/common';
 
 import { IResponse } from '@src/interfaces';
 
 import { BaseController } from '../base.controller';
 import { UserService } from '@service/user.service';
-import { EFlag } from '@root/src/interfaces/enum';
+import { EFlag } from '@src/interfaces/enum';
+import { EmailGuard } from '@src/guard/email.guard';
 
 @Controller('user')
 export class UserController extends BaseController {
@@ -15,6 +16,7 @@ export class UserController extends BaseController {
   }
 
   @Get('list')
+  @UseGuards(EmailGuard)
   public async userList(@Res() res: IResponse) {
     return this.userService.userList(res.locals.user);
   }
@@ -36,6 +38,7 @@ export class UserController extends BaseController {
   }
 
   @Get('statistic')
+  @UseGuards(EmailGuard)
   public async statistic() {
     return this.userService.statistic();
   }

@@ -7,7 +7,6 @@ import { IResponse } from '@src/interfaces';
 import UserRepository from '@repository/user.repository';
 import UserSessionRepository from '@repository/userSession.repository';
 
-import { Forbidden } from '@app/exception';
 import UserModel from '../database/models/user.model';
 
 @Injectable()
@@ -18,8 +17,6 @@ export class UserService {
   ) {}
 
   public async userList(user: IResponse['locals']['user']) {
-    if (!user.isEmailVerified) throw new Forbidden({ reason: 'Email not verified yet', resendLink: '' });
-
     const users = await this.userRepository.userWithLastSession();
     return {
       data: users.map(({ id, email, name, profilePicture, loginCount: totalLogin, lastSessionDate, emailVerificationDate, insertDate }) => ({

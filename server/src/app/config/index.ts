@@ -1,11 +1,10 @@
 import { config } from 'dotenv';
-import { join } from 'path';
+// import { join } from 'path';
 import os from 'os';
 import { TypeOrmModuleOptions } from '@nestjs/typeorm';
 import { EDbPrefix } from '@root/src/interfaces/enum';
-
-const pjson = require(join(process.cwd(), 'package.json'));
-
+// import pjson from '@root/package.json'
+// const pjson = require(join(process.cwd(), 'package.json'));
 config();
 const validNodeEnv = ['development', 'test', 'staging', 'production'];
 
@@ -13,8 +12,8 @@ const appConfig = {
   cpuSize: os.cpus().length,
   app: {
     url: process.env.APP_URL as string,
-    name: pjson.name,
-    version: pjson.version,
+    // name: pjson.name,
+    // version: pjson.version,
     env: (validNodeEnv.includes((process.env as any).NODE_ENV) ? process.env.NODE_ENV : 'development') as string,
     port: parseInt((process.env as any).PORT) || 3000,
   },

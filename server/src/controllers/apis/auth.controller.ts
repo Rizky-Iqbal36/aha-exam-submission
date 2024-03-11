@@ -8,7 +8,7 @@ import { EFlag } from '@src/interfaces/enum';
 import { AuthService } from '@service/auth.service';
 import cryptography from '@app/utils/cryptography';
 import appConfig from '@app/config';
-const { client } = appConfig;
+const { client, app } = appConfig;
 
 import { BaseController } from '../base.controller';
 import { IResponse } from '@root/src/interfaces';
@@ -57,8 +57,7 @@ export class AuthenticationController extends BaseController {
     });
     if (validation) {
       const token = await this.authService.oauthHandler(query);
-      res.cookie('accessToken', token);
-      res.redirect(client.url + '/onboard');
+      res.redirect(client.url + `/onboard?token=${token}`);
     }
   }
 
@@ -125,7 +124,6 @@ export class AuthenticationController extends BaseController {
     const { email } = cryptography.verifyToken(signature) as any;
 
     const { token } = await this.authService.verification({ email });
-    res.cookie('accessToken', token);
-    res.redirect(client.url + '/onboard');
+    res.redirect(client.url + `/onboard?token=${token}`);
   }
 }

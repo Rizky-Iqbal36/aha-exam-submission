@@ -18,7 +18,7 @@ class BackendInteractor {
 
   public async auth(mode: "register" | "login", payload: TAuthPayload) {
     return this.client
-      .post(`/auth/${mode}`, payload, {
+      .post(`auth/${mode}`, payload, {
         headers: {
           "content-type": "application/json",
         },
@@ -35,7 +35,7 @@ class BackendInteractor {
   }
 
   public async editProfile(payload: { name: string }) {
-    return this.client.post("/user/profile", payload).then((res) => res.data);
+    return this.client.post("user/profile", payload).then((res) => res.data);
   }
 
   public async resetPassword(payload: {
@@ -43,14 +43,14 @@ class BackendInteractor {
     newPassword: string;
     confirmPassword: string;
   }) {
-    return this.client.post("/password/reset", payload).then((res) => res.data);
+    return this.client.post("password/reset", payload).then((res) => res.data);
   }
 
   public async setPassword(payload: {
     newPassword: string;
     confirmPassword: string;
   }) {
-    return this.client.post("/password/set", payload).then((res) => res.data);
+    return this.client.post("password/set", payload).then((res) => res.data);
   }
 
   public async users(): Promise<

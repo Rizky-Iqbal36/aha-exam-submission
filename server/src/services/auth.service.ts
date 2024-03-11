@@ -89,7 +89,9 @@ export class AuthService {
     };
   }
 
-  public async resendVerification({ email }: IResponse['locals']['user']) {
+  public async resendVerification({ email, isEmailVerified }: IResponse['locals']['user']) {
+    if (isEmailVerified) throw new BadRequest({ flag: EFlag.BAD_REQUEST }, { message: 'Email Already verified' });
+
     const signature = cryptography.createSignature({ email });
     await sendGrid.sendEmail({
       recipient: email,
@@ -138,7 +140,7 @@ export class AuthService {
     const { raw } = await this.userRepository.upsert(
       {
         email,
-        name: user ? user.name : name,
+        name: user?.name ? user.name : name,
         profilePicture,
         loginCount: user ? user.loginCount + 1 : 1,
         emailVerificationDate: !user ? () => 'NOW()' : user.emailVerificationDate,
