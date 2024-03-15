@@ -33,7 +33,7 @@ const Login = () => {
       async onSuccess({ user, token }: { user: any; token: string }) {
         const cookies = new Cookies();
         context.setToken(token);
-        cookies.set("accessToken", token);
+        cookies.set("accessToken", token, { maxAge: 1000 * 60 * 60 * 24 * 30 });
 
         localStorage.setItem("user", JSON.stringify(await user));
 

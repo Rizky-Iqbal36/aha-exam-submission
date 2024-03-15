@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 
+import { useNavigate } from "react-router-dom";
 import SwipeableViews from "react-swipeable-views";
 import { AppBar, Tabs, Tab, Box, useTheme } from "@mui/material";
 import Login from "../components/molekul/login";
@@ -40,6 +41,7 @@ function a11yProps(index: number) {
 }
 
 function LandingPage() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
 
@@ -50,6 +52,11 @@ function LandingPage() {
   const handleChangeIndex = (index: number) => {
     setValue(index);
   };
+
+  const user = JSON.parse(localStorage.getItem("user") ?? "false");
+  useEffect(() => {
+    if (user) navigate("/dashboard");
+  }, []);
 
   return (
     <div className="App">

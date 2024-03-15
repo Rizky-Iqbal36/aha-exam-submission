@@ -22,7 +22,7 @@ const Onboard = () => {
       .then((data) => {
         const cookies = new Cookies();
         context.setToken(token);
-        cookies.set("accessToken", token);
+        cookies.set("accessToken", token, { maxAge: 1000 * 60 * 60 * 24 * 30 });
         localStorage.setItem("user", JSON.stringify(data));
         navigate("/dashboard");
       })

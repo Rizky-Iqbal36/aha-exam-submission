@@ -1,5 +1,12 @@
-import React, { useContext, createContext, ReactNode, useState } from "react";
+import React, {
+  useContext,
+  createContext,
+  ReactNode,
+  useState,
+  useEffect,
+} from "react";
 import { Cookies } from "react-cookie";
+import BackendInteractor from "../../app/api";
 
 let defaultValue = {
   token: "",
@@ -12,6 +19,19 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const [token, setToken] = useState(cookies.get("accessToken") || "");
   defaultValue.token = token;
   (defaultValue as any).setToken = setToken;
+  console.log("Auth Provider triggered");
+  useEffect(() => {
+    if (token) {
+      const user = JSON.parse(localStorage.getItem("user") ?? "false");
+      if (!user) {
+        const backendInteractor = new BackendInteractor(token);
+        backendInteractor.profile().then((data) => {
+          localStorage.setItem("user", JSON.stringify(data));
+        });
+      }
+    } else localStorage.removeItem("user");
+  }, []);
+
   return (
     <AuthContext.Provider value={defaultValue}>{children}</AuthContext.Provider>
   );
