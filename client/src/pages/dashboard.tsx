@@ -72,7 +72,7 @@ const Dashboard = () => {
             <>
               <button onClick={() => navigate("/profile")}>Profile</button>
               <Statistic />
-              <div style={{ height: 400, width: "80%", margin: 20 }}>
+              <div style={{ height: '100vh', width: "80%", margin: 20 }}>
                 <TableContainer component={Paper}>
                   <Table sx={{ minWidth: 700 }} aria-label="customized table">
                     <TableHead>
